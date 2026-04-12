@@ -6,11 +6,10 @@ load_dotenv()
 
 CLIENT = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
-   base_url="https://api.groq.com/openai/v1"
+    base_url="https://api.groq.com/openai/v1"
 )
 
-def generate_draft(topic: str, model: str = "llama-3.1-8b-instant") -> str:
-    
+def generate_stream(topic):
     prompt = f"""
 You are a story writing expert.
 Write a story on the topic: {topic}.
@@ -18,15 +17,13 @@ Include introduction, body, and conclusion.
 """
 
     response = CLIENT.chat.completions.create(
-        model=model,
+        model="llama-3.1-8b-instant",   # ✅ FIXED
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
+        stream=True
     )
- 
-    return response.choices[0].message.content
+
+    for chunk in response:
+        print(chunk.choices[0].delta.content or "", end="", flush=True)
 
 
-print(generate_draft("David and Goliath"))
-
-
-
+generate_stream("David and Goliath")
