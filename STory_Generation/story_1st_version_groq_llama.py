@@ -14,7 +14,7 @@ def generate_draft(topic: str, model: str = "llama-3.1-8b-instant") -> str:
     prompt = f"""
 You are a story writing expert.
 Write a story on the topic: {topic}.
-Include introduction, body, and conclusion.
+Include introduction, body, and conclusion and also bible reference and life application
 """
 
     response = CLIENT.chat.completions.create(
