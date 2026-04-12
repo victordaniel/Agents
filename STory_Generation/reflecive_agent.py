@@ -1,24 +1,4 @@
-"""
-Exercise : reflect_on_draft Function
-Objective: Write a function called reflect_on_draft that takes a previously generated essay draft and uses a language model to provide constructive feedback.
 
-Inputs:
-
-draft (str): The essay text to reflect on.
-model (str, optional): The model identifier to use. Defaults to "openai:o4-mini".
-Output:
-
-A string with feedback in paragraph form.
-Requirements:
-
-The feedback should be critical but constructive.
-It should address issues such as structure, clarity, strength of argument, and writing style.
-The function should send the draft to the model and return its response.
-You do not need to rewrite the essay at this step—just analyze and reflect on it.
-
-
-
-"""
 
 
 
@@ -53,12 +33,34 @@ also bible reference and life application
  
     return response.choices[0].message.content
 
-
-#rint(generate_draft("David and Goliath"))
+draft = generate_draft("Aaron and the Tabernacle")
+print(draft)
 
 #****************************************************
 
+#Objective - 2:
 
+"""
+Exercise : reflect_on_draft Function
+Objective: Write a function called reflect_on_draft that takes a previously generated essay draft and uses a language model to provide constructive feedback.
+
+Inputs:
+
+draft (str): The essay text to reflect on.
+model (str, optional): The model identifier to use. Defaults to "openai:o4-mini".
+Output:
+
+A string with feedback in paragraph form.
+Requirements:
+
+The feedback should be critical but constructive.
+It should address issues such as structure, clarity, strength of argument, and writing style.
+The function should send the draft to the model and return its response.
+You do not need to rewrite the essay at this step—just analyze and reflect on it.
+
+
+
+"""
 
 def reflect_on_draft(draft: str, model: str = "llama-3.1-8b-instant") -> str:
     
@@ -94,7 +96,7 @@ Essay:
     return response.choices[0].message.content
 
 # Example usage
-draft = generate_draft("David and Goliath")
+#draft = generate_draft("David and Goliath")
 feedback = reflect_on_draft(draft)
 
 
@@ -106,4 +108,52 @@ print(feedback)
 
 
 
+#objective -3 
+"""
+Objective: Implement a function called revise_draft that improves a given essay draft based on feedback from a reflection step.
 
+Inputs:
+
+original_draft (str): The initial version of the essay.
+reflection (str): Constructive feedback or critique on the draft.
+model (str, optional): The model identifier to use.
+
+Output:
+
+A string containing the revised and improved essay.
+Requirements:
+
+The revised draft should address the issues mentioned in the feedback.
+It should improve clarity, coherence, argument strength, and overall flow.
+The function should use the feedback to guide the revision, and return only the final revised essay.
+
+
+"""
+
+def revise_draft(original_draft: str, reflection: str, model: str = "llama-3.1-8b-instant") -> str:
+    
+    prompt = f"""    
+                    You are an expert editor.
+                    Revise the following essay based on the feedback provided:
+
+                    Feedback:
+                    {reflection}
+
+                    Essay:
+                    {original_draft}
+                    """
+
+    response = CLIENT.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+    )
+
+    return response.choices[0].message.content
+
+# Example usage
+
+#***********************************************
+revised_draft = revise_draft(draft, feedback)
+print("\n" + "="*50 + "=Revised Draft" + "="*50 + "\n")
+print(revised_draft)    
